@@ -1,11 +1,12 @@
 ﻿using System;using System.Collections.Generic;using System.Globalization;using System.Linq;using System.Text;using System.Threading.Tasks;namespace Drone_Service_Application{
     public class Drone
     {
-        private string ClientName = string.Empty;
-        private string DroneModel = string.Empty;
-        private string ServiceProblem = string.Empty;
-        private double ServiceCost = 0.0;
-        private int ServiceTag = 0;
+        // Private attributes
+        private string ClientName;
+        private string DroneModel;
+        private string ServiceProblem;
+        private double ServiceCost;
+        private int ServiceTag;
 
         // Public getter/setter methods
         public string GetClientName() { return ClientName; }
@@ -22,7 +23,5 @@
         
         public int GetServiceTag() { return ServiceTag; }
         public void SetServiceTag(int value) { ServiceTag = value; }
-        public string Display() { return $"Client Name: {ClientName}\n Service Cost: {ServiceCost:C}"; }
-
-
+        public string Display() { return $"Client Name: {ClientName} - Service Cost: {ServiceCost:C}"; }
     }}

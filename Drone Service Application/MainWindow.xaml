@@ -3,10 +3,145 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Drone_Service_Application"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Drone Repair Service Application" Height="Auto" Width="1000">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
+
+        <!-- Top Section -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Input Section -->
+            <GroupBox Header="New Service Entry" Grid.Row="0" Margin="10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Margin="10">
+                        <Label Content="Client Name:"/>
+                        <TextBox x:Name="ClientNameTextBox" Margin="10" Height="20"/>
+
+                        <Label Content="Drone Model:"/>
+                        <TextBox x:Name="DroneModelTextBox" Margin="10" Height="20"/>
+
+                        <Label Content="Service Problem:"/>
+                        <TextBox x:Name="ServiceProblemTextBox" TextWrapping="Wrap" AcceptsReturn="True" Margin="10" Height="100"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Margin="10">
+                        <Label Content="Service Cost:"/>
+                        <TextBox x:Name="ServiceCostTextBox" Margin="10" Height="20"/>
+
+                        <Label Content="Service Tag:"/>
+                        <Grid Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="30"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox x:Name="ServiceTagTextBox" Grid.Column="0" Text="100" 
+                                 PreviewTextInput="ServiceTagTextBox_PreviewTextInput"
+                                 TextAlignment="Right" VerticalContentAlignment="Center"/>
+
+                            <Grid Grid.Column="1" Margin="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Button x:Name="ServiceTagUpButton" Grid.Row="0" Content="▲" 
+                                    Click="ServiceTagUpButton_Click" Padding="0" FontSize="8"/>
+
+                                <Button x:Name="ServiceTagDownButton" Grid.Row="1" Content="▼" 
+                                    Click="ServiceTagDownButton_Click" Padding="0" FontSize="8"/>
+                            </Grid>
+                        </Grid>
+
+                        <Label Content="Service Priority:"/>
+                        <StackPanel Margin="0,0,0,10">
+                            <RadioButton x:Name="RegularRadioButton" Content="Regular" 
+                                        GroupName="ServicePriority" IsChecked="True" Margin="5"/>
+                            <RadioButton x:Name="ExpressRadioButton" Content="Express" 
+                                        GroupName="ServicePriority" Margin="5"/>
+                        </StackPanel>
+
+                        <Button x:Name="AddNewItemButton" Content="Add New Service Item" 
+                                    Click="AddNewItem" Height="30" Margin="10"/>
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
+
+            <!-- Finished Services -->
+            <GroupBox Header="Finished Services" Grid.Column="1" Margin="5">
+                <ListBox x:Name="FinishedListBox" MouseDoubleClick="FinishedListBox_DoubleClick"/>
+            </GroupBox>
+        </Grid>
+
+
+        <!-- Display Section -->
+        <Grid Grid.Row="1" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Regular Service Queue -->
+            <GroupBox Header="Regular Service Queue" Grid.Column="0" Margin="5">
+                <StackPanel>
+                    <ListView x:Name="RegularServiceListView" Height="280" Margin="5"
+                              MouseLeftButtonUp="RegularServiceListView_MouseClick">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Client Name" Width="100" DisplayMemberBinding="{Binding ClientName}"/>
+                                <GridViewColumn Header="Drone Model" Width="100" DisplayMemberBinding="{Binding DroneModel}"/>
+                                <GridViewColumn Header="Service Problem" Width="150" DisplayMemberBinding="{Binding ServiceProblem}"/>
+                                <GridViewColumn Header="Service Cost" Width="50" DisplayMemberBinding="{Binding ServiceCost}"/>
+                                <GridViewColumn Header="Service Tag" Width="50" DisplayMemberBinding="{Binding ServiceTag}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Button Content="Complete Regular Service" Click="CompleteRegularService" 
+                            VerticalAlignment="Stretch" HorizontalAlignment="Right"/>
+                </StackPanel>
+            </GroupBox>
+
+            <!-- Express Service Queue -->
+            <GroupBox Header="Express Service Queue" Grid.Column="1" Margin="5">
+                <StackPanel>
+                    <ListView x:Name="ExpressServiceListView" Height="280" Margin="5"
+                              MouseLeftButtonUp="ExpressServiceListView_MouseClick">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Client Name" Width="100" DisplayMemberBinding="{Binding ClientName}"/>
+                                <GridViewColumn Header="Drone Model" Width="100" DisplayMemberBinding="{Binding DroneModel}"/>
+                                <GridViewColumn Header="Service Problem" Width="150" DisplayMemberBinding="{Binding ServiceProblem}"/>
+                                <GridViewColumn Header="Service Cost" Width="50" DisplayMemberBinding="{Binding ServiceCost}"/>
+                                <GridViewColumn Header="Service Tag" Width="50" DisplayMemberBinding="{Binding ServiceTag}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Button Content="Complete Express Service" Click="CompleteExpressService" 
+                            VerticalAlignment="Stretch" HorizontalAlignment="Right"/>
+                </StackPanel>
+            </GroupBox>
+        </Grid>
+
+        <!-- Status Strip -->
+        <StatusBar Grid.Row="2" Height="30">
+            <StatusBarItem>
+                <TextBlock x:Name="StatusTextBlock" Text="Status"/>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>
