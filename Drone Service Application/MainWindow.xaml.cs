@@ -1,11 +1,6 @@
-﻿using Drone_Service_Application;
-using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Drone_Service_Application
 {
@@ -99,21 +94,22 @@ namespace Drone_Service_Application
                     return;
                 }
 
-                // Validate service tag range (100-900)
-                if (serviceTag < 100 || serviceTag > 900)
+                // Validate service tag range (100-900) an is increment
+                if (serviceTag < 100 || serviceTag > 900 || serviceTag % 10 != 0)
                 {
                     UpdateStatus("Error: Service Tag must be between 100 and 900");
                     return;
                 }
 
-                // 6.7 Call GetServicePriority method before adding to queue
-                string priority = GetServicePriority();
-
-                // 6.6 Before adding to Express Queue, increase service cost by 15%
-                if (priority == "Express")
+                // Check if service tag is already in use
+                if (IsServiceTagInUse(serviceTag))
                 {
-                    serviceCost = serviceCost * 1.15;
+                    UpdateStatus($"Error: Service Tag {serviceTag} is already in use. Please select a different tag.");
+                    return;
                 }
+
+                // 6.11 Increment the service tag control (called before adding, as per requirement)
+                IncrementServiceTag();
 
                 // Create new Drone object using setter methods
                 Drone newDrone = new Drone();
@@ -122,6 +118,10 @@ namespace Drone_Service_Application
                 newDrone.SetServiceProblem(ServiceProblemTextBox.Text);
                 newDrone.SetServiceCost(serviceCost);
                 newDrone.SetServiceTag(serviceTag);
+
+
+                // 6.7 Call GetServicePriority method before adding to queue
+                string priority = GetServicePriority();
 
                 // Add to appropriate queue based on priority
                 if (priority == "Regular")
@@ -132,13 +132,14 @@ namespace Drone_Service_Application
                 }
                 else // Express
                 {
+                    // 6.6 Before adding to Express Queue, increase service cost by 15%
+                    serviceCost = serviceCost * 1.15;
                     ExpressService.Enqueue(newDrone);
                     DisplayExpressService();
                     UpdateStatus($"Added {newDrone.GetClientName()} to Express Service Queue - Tag #{serviceTag} (15% surcharge applied)");
                 }
 
-                // 6.11 Increment the service tag control (called before adding, as per requirement)
-                IncrementServiceTag();
+
 
                 // 6.17 Clear all textboxes after service item has been added
                 ClearTextBoxes();
@@ -224,6 +225,7 @@ namespace Drone_Service_Application
         // 6.10 Create a custom method to ensure the Service Cost textbox can only accept a double value with two decimal points
         /// <summary>
         /// Validate Service Cost input - only allows double values with up to two decimal places
+        /// Validate Service Cost input, only allows double values with up to two decimal places
         /// </summary>
         private void ServiceCostTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
@@ -234,14 +236,14 @@ namespace Drone_Service_Application
             // Empty string is valid (allows clearing the textbox)
             if (string.IsNullOrEmpty(newText))
             {
-                e.Handled = false; 
+                e.Handled = false;
                 return;
             }
 
             // Check if it can be parsed as a decimal/double
             if (!double.TryParse(newText, out double result))
             {
-                e.Handled = true; 
+                e.Handled = true;
                 return;
             }
 
@@ -258,7 +260,7 @@ namespace Drone_Service_Application
                 }
             }
 
-            e.Handled = false; 
+            e.Handled = false;
         }
 
         /// <summary>
@@ -270,6 +272,32 @@ namespace Drone_Service_Application
             {
                 ServiceCostTextBox.Text = value.ToString("F2");
             }
+        }
+
+        /// <summary>
+        /// Check if a service tag is already in use in either queue
+        /// </summary>
+        private bool IsServiceTagInUse(int serviceTag)
+        {
+            // Check Regular Service Queue
+            foreach (Drone drone in RegularService)
+            {
+                if (drone.GetServiceTag() == serviceTag)
+                {
+                    return true;
+                }
+            }
+
+            // Check Express Service Queue
+            foreach (Drone drone in ExpressService)
+            {
+                if (drone.GetServiceTag() == serviceTag)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         // 6.11 Create a custom method that will automatically increment the service tag when a service item is added

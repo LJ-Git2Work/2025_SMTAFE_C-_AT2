@@ -52,7 +52,8 @@
 
                             <TextBox x:Name="ServiceTagTextBox" Grid.Column="0" Text="100" 
                                  PreviewTextInput="ServiceTagTextBox_PreviewTextInput"
-                                 TextAlignment="Right" VerticalContentAlignment="Center"/>
+                                 TextAlignment="Right" VerticalContentAlignment="Center"
+                                     IsReadOnly="True"/>
 
                             <Grid Grid.Column="1" Margin="2">
                                 <Grid.RowDefinitions>

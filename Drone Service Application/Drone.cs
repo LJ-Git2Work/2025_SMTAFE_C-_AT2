@@ -1,4 +1,7 @@
-﻿using System;using System.Collections.Generic;using System.Globalization;using System.Linq;using System.Text;using System.Threading.Tasks;namespace Drone_Service_Application{
+﻿using System.Globalization;
+
+namespace Drone_Service_Application
+{
     public class Drone
     {
         // Private attributes
@@ -17,11 +20,12 @@
 
         public string GetServiceProblem() { return ServiceProblem; }
         public void SetServiceProblem(string value) { ServiceProblem = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value.ToLower()); ; }
-        
+
         public double GetServiceCost() { return ServiceCost; }
         public void SetServiceCost(double value) { ServiceCost = value; }
-        
+
         public int GetServiceTag() { return ServiceTag; }
         public void SetServiceTag(int value) { ServiceTag = value; }
         public string Display() { return $"Client Name: {ClientName} - Service Cost: {ServiceCost:C}"; }
-    }}
+    }
+}
