@@ -133,7 +133,7 @@ namespace Drone_Service_Application
                 else // Express
                 {
                     // 6.6 Before adding to Express Queue, increase service cost by 15%
-                    serviceCost = serviceCost * 1.15;
+                    newDrone.SetServiceCost(newDrone.GetServiceCost() * 1.15);
                     ExpressService.Enqueue(newDrone);
                     DisplayExpressService();
                     UpdateStatus($"Added {newDrone.GetClientName()} to Express Service Queue - Tag #{serviceTag} (15% surcharge applied)");
